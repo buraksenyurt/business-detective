@@ -21,6 +21,6 @@ Solution kod tarafında açılı ve BusinessLibrary içerisindeki BCCommon türe
 
 ## Daha Neler Yapılabilir?
 
-+ BusinessHost uygulaması yazılıp WCF servis endpoint'lerinin işler olması sağlanabilir.
++ BusinessHost isimli bir uygulama yazılıp WCF servis endpoint'lerinin işler olması sağlanabilir.
 + Araç komut satırından parametre alarak herhangi bir çözüme uygulanabilir hale getirilebilir.
 + 
