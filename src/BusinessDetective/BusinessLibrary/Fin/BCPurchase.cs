@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace BusinessLibrary.Fin
 {
-    public class BCPurchase : BCCommon
+    public class BCPurchase : BCCommon,IBCPurchase
     {
         public int Find(Purchase purchase)
         {

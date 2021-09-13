@@ -2,7 +2,7 @@
 
 namespace BusinessLibrary.Fin
 {
-    public class BCInvoice : BCCommon
+    public class BCInvoice : BCCommon,IBCInvoice
     {
         public double CalculateInvoiceIncome(Invoice invoice)
         {

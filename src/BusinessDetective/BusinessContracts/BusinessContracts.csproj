@@ -42,6 +42,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cus\Global\IBCGlobalCustomer.cs" />
+    <Compile Include="Fin\IBCInvoice.cs" />
+    <Compile Include="Fin\IBCPurchase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
