@@ -5,8 +5,7 @@ using System.Collections.Generic;
 
 namespace BusinessLibrary.Cus.Global
 {
-    public class BCGlobalCustomer
-        :BCCommon
+    public class BCGlobalCustomer : BCCommon
     {
         public List<Customer> CustomersByLocation(string city)
         {
