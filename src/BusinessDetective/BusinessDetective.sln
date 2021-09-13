@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entity", "Entity\Entity.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessContracts", "BusinessContracts\BusinessContracts.csproj", "{100F3079-5002-4103-98B0-4CF4E904B5E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessConverter", "BusinessConverter\BusinessConverter.csproj", "{33260666-3AA2-41B2-ABC2-306B6F4F6BB8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{100F3079-5002-4103-98B0-4CF4E904B5E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{100F3079-5002-4103-98B0-4CF4E904B5E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{100F3079-5002-4103-98B0-4CF4E904B5E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33260666-3AA2-41B2-ABC2-306B6F4F6BB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33260666-3AA2-41B2-ABC2-306B6F4F6BB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33260666-3AA2-41B2-ABC2-306B6F4F6BB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33260666-3AA2-41B2-ABC2-306B6F4F6BB8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
