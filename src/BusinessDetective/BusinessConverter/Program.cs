@@ -175,18 +175,17 @@ namespace BusinessConverter
                     foreach (var innerClass in documentRoot.DescendantNodes().OfType<ClassDeclarationSyntax>().ToList())
                     {
                         if (innerClass.Identifier.ToFullString().Contains("DependencyInjection")
-                            || innerClass.Identifier.ToFullString().Contains("BCommon")
+                            || innerClass.Identifier.ToFullString().Contains("BCCommon")
                             )
                             continue;
 
                         if (innerClass.BaseList != null &&
                             innerClass.BaseList.Types.Count == 1 &&
-                            innerClass.BaseList.Types[0].ToString() == "BusinessClass"
-                            && innerClass.BaseList.Types[0].ToString() != "XBusinessClass"
+                            innerClass.BaseList.Types[0].ToString() == "BCCommon"
                             )
                         {
-                            var searching = $"public class {innerClass.Identifier} : BusinessClass";
-                            var changing = $"public class {innerClass.Identifier} : BusinessClass,I{innerClass.Identifier}";
+                            var searching = $"public class {innerClass.Identifier} : BCCommon";
+                            var changing = $"public class {innerClass.Identifier} : BCCommon,I{innerClass.Identifier}";
                             var changed = documentRoot.GetText().ToString().Replace(searching, changing);
                             documentRoot = CSharpSyntaxTree.ParseText(changed).GetRoot();
                             var newDoc = doc.WithText(documentRoot.GetText());
@@ -200,10 +199,23 @@ namespace BusinessConverter
 
             #endregion
 
+            #region Create Interfaces On BusinessContracts
+
+            var contractProject = lastSln.Projects.FirstOrDefault(i => i.Name == "BusinessContracts");
+            foreach (var doc in interfaceDocuments)
+            {
+                var added = contractProject.AddDocument(doc.Name, doc.FormattedFile, doc.DirectoryName);
+                contractProject = added.Project;
+            }
+
+            var contractedSln = contractProject.Solution;
+            msWorkspace.TryApplyChanges(contractedSln);
+            msWorkspace.CloseSolution();
+
+            #endregion
+
             File.WriteAllText(Path.Combine(Environment.CurrentDirectory, "InterfaceCreateReport.txt"), reporter.ToString());
             File.WriteAllText(Path.Combine(Environment.CurrentDirectory, "Endpoints.xml"), svcBuilder.ToString());
-
-            msWorkspace.CloseSolution();
         }
     }
 }
