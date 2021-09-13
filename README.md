@@ -23,7 +23,7 @@ Solution kod tarafında açılı ve BusinessLibrary içerisindeki BCCommon türe
 
 ## Denemeler
 
-Denemek için BusinessConverter console uygulamasının çalıştırılması yeterlidir. Aşağıdakine benzer bir çıktı oluşması gerekir.
+Denemek için BusinessConverter console uygulamasının çalıştırılması yeterlidir. Aşağıdakine benzer bir çıktı oluşması gerekir. Ben sonuçları __process__ isimli branch'te topluyorum.
 
 ![./Assets/screenshot_1.png](./Assets/screenshot_1.png)
 
@@ -31,4 +31,4 @@ Denemek için BusinessConverter console uygulamasının çalıştırılması yet
 
 + BusinessHost isimli bir uygulama yazılıp WCF servis endpoint'lerinin işler olması sağlanabilir.
 + Araç komut satırından parametre alarak herhangi bir çözüme uygulanabilir hale getirilebilir.
-+ 
++ Çözüm belli bir uygulamanın desenine özgü oldu. Generic yapılabilir.
