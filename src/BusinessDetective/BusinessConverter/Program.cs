@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace BusinessConverter
 {
+    //TODO@Burak Refactore yapalım
     class Program
     {
         static async Task Main(string[] args)
@@ -152,6 +153,50 @@ namespace BusinessConverter
                     }
                 }
             }
+
+            var changedSln = project.Solution;
+
+            #endregion
+
+            #region Implement Interfaces to BusinessClass
+
+            var changedProject = changedSln.Projects.FirstOrDefault(i => i.Name == "BusinessLibrary");
+            counter = 1;
+
+            foreach (DocumentId docId in changedProject.DocumentIds)
+            {
+                Document doc = changedProject.GetDocument(docId);
+                if (doc.Name.StartsWith("BC"))
+                {
+                    Console.WriteLine($"Changing:{counter}\t{doc.FilePath}");
+                    counter++;
+                    var syntaxTree = doc.GetSyntaxTreeAsync().Result;
+                    var documentRoot = syntaxTree.GetRoot();
+                    foreach (var innerClass in documentRoot.DescendantNodes().OfType<ClassDeclarationSyntax>().ToList())
+                    {
+                        if (innerClass.Identifier.ToFullString().Contains("DependencyInjection")
+                            || innerClass.Identifier.ToFullString().Contains("BCommon")
+                            )
+                            continue;
+
+                        if (innerClass.BaseList != null &&
+                            innerClass.BaseList.Types.Count == 1 &&
+                            innerClass.BaseList.Types[0].ToString() == "BusinessClass"
+                            && innerClass.BaseList.Types[0].ToString() != "XBusinessClass"
+                            )
+                        {
+                            var searching = $"public class {innerClass.Identifier} : BusinessClass";
+                            var changing = $"public class {innerClass.Identifier} : BusinessClass,I{innerClass.Identifier}";
+                            var changed = documentRoot.GetText().ToString().Replace(searching, changing);
+                            documentRoot = CSharpSyntaxTree.ParseText(changed).GetRoot();
+                            var newDoc = doc.WithText(documentRoot.GetText());
+                            changedProject = newDoc.Project;
+                        }
+                    }
+                }
+            }
+
+            var lastSln = changedProject.Solution;
 
             #endregion
 
