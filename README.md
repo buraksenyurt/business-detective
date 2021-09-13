@@ -21,6 +21,12 @@ ___Sınıfları elle interface haline getirmek veya dönüştürme işini üstle
 
 Solution kod tarafında açılı ve BusinessLibrary içerisindeki BCCommon türevli sınıflar keşfedilerek çeşitli kurallara göre interface tiplerinin oluşturulması sağlanır. Ayrıca o anki sınıfın bu interface tipini kullanması için gerekli ilaveler yapılır. İşlemler sırasında bir listede toplanan interface tipleri BusinessContracts içerisinde de eklenir. Interface tipleri oluşturulurken WCF için gerekli niteliklerle donatılır ve uygun config endPoint'lerinin çıkarılması sağlanır.
 
+## Denemeler
+
+Denemek için BusinessConverter console uygulamasının çalıştırılması yeterlidir. Aşağıdakine benzer bir çıktı oluşması gerekir.
+
+![./Assets/screenshot_1.png](./Assets/screenshot_1.png)
+
 ## Daha Neler Yapılabilir?
 
 + BusinessHost isimli bir uygulama yazılıp WCF servis endpoint'lerinin işler olması sağlanabilir.
