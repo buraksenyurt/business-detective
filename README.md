@@ -8,6 +8,8 @@ Modernize edilmek istenen bir uygulamadaki business nesnelerin tamamının birer
 + BusinessContracts
 + Entity
 
+___Sınıfları elle interface haline getirmek veya dönüştürme işini üstlenen BusinessConverter'dan diğer projeleri referans ederek çalışmak yasak!___
+
 İstenenler şunlar:
 
 + BusinessLibrary içerisinde olup BCCommon'dan türeyen sınıflar için birer Interface nesnesi oluşturulsun ve BusinessContract altına aynı klasör hiyerarşisine göre eklensinler.
