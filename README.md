@@ -25,7 +25,7 @@ Solution kod tarafında açılı ve BusinessLibrary içerisindeki BCCommon türe
 
 Denemek için BusinessConverter console uygulamasının çalıştırılması yeterlidir. Aşağıdakine benzer bir çıktı oluşması gerekir. Ben sonuçları __process__ isimli branch'te topluyorum.
 
-![./Assets/screenshot_1.png](./Assets/screenshot_1.png)
+![./assets/screenshot_1.png](./assets/screenshot_1.png)
 
 ## Daha Neler Yapılabilir?
 
