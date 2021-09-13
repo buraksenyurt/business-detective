@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.MSBuild;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -20,11 +21,14 @@ namespace BusinessConverter
             MSBuildWorkspace msWorkspace = MSBuildWorkspace.Create();
             msWorkspace.LoadMetadataForReferencedProjects = true;
 
-            var solutionPath = @"C:\Users\burak\source\repos\business-detective\src\BusinessDetective\BusinessDetective.sln";
+            //TODO Komut satırından alalım
+            var solutionPath = ConfigurationManager.AppSettings["SolutionPath"];
+            var businessLibName = ConfigurationManager.AppSettings["BusinessProjectName"];
+            var businessContractName = ConfigurationManager.AppSettings["BusinessContractProjectName"];
             var solution = await msWorkspace.OpenSolutionAsync(solutionPath);
 
-            Project project = solution.Projects.FirstOrDefault(i => i.Name == "BusinessLibrary");
-            Project projectServiceContract = solution.Projects.FirstOrDefault(i => i.Name == "BusinessContracts");
+            Project project = solution.Projects.FirstOrDefault(i => i.Name == businessLibName);
+            Project projectServiceContract = solution.Projects.FirstOrDefault(i => i.Name == businessContractName);
             var contractRootPath = Path.GetDirectoryName(projectServiceContract.FilePath);
             var counter = 1;
             StringBuilder svcBuilder = new StringBuilder();
@@ -37,7 +41,7 @@ namespace BusinessConverter
             {
                 Document doc = project.GetDocument(docId);
 
-                if (doc.Name.StartsWith("BC"))
+                if (doc.Name.StartsWith("BC")) // Arama desenini parametrik alabilir miyiz?
                 {
                     Console.WriteLine($"File :{counter}\t{doc.FilePath}");
                     counter++;
@@ -52,6 +56,7 @@ namespace BusinessConverter
                     }
                     foreach (var innerClass in classess)
                     {
+                        //TODO Bu kısmı bir yasaklılar listesinden kontrol ettirelim. Uygulama dışından gelsin.
                         if (innerClass.Identifier.ToFullString().Contains("DependencyInjection")
                             || innerClass.Identifier.ToFullString().Contains("BCCommon"))
                             continue;
@@ -98,7 +103,7 @@ namespace BusinessConverter
                             var methods = innerClass.DescendantNodes().OfType<MethodDeclarationSyntax>().ToList();
                             foreach (var method in methods)
                             {
-                                if (method.Modifiers.ToString().Contains("static"))
+                                if (method.Modifiers.ToString().Contains("static")) //static harici hangi metotları atlatmak lazım. Mesela private olanlar?
                                     continue;
 
                                 if (method.Modifiers.ToString().Contains("public"))
@@ -160,7 +165,7 @@ namespace BusinessConverter
 
             #region Implement Interfaces to BusinessClass
 
-            var changedProject = changedSln.Projects.FirstOrDefault(i => i.Name == "BusinessLibrary");
+            var changedProject = changedSln.Projects.FirstOrDefault(i => i.Name == businessLibName);
             counter = 1;
 
             foreach (DocumentId docId in changedProject.DocumentIds)
@@ -201,7 +206,7 @@ namespace BusinessConverter
 
             #region Create Interfaces On BusinessContracts
 
-            var contractProject = lastSln.Projects.FirstOrDefault(i => i.Name == "BusinessContracts");
+            var contractProject = lastSln.Projects.FirstOrDefault(i => i.Name == businessContractName);
             foreach (var doc in interfaceDocuments)
             {
                 var added = contractProject.AddDocument(doc.Name, doc.FormattedFile, doc.DirectoryName);
