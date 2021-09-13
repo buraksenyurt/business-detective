@@ -1,0 +1,2 @@
+# business-detective
+Modernize edilmek istenen bir uygulamadaki business nesnelerin tamamının birer sözleşmesini çıkarmak istediğimizi düşünelim. Her business nesne için birer interface oluşturacağız. Hatta uygulamanın .Net Framework tabanlı olduğunu ve bu sözleşmeler için birer WCF servis noktası üretmek istediğimizi farz edelim. Biraz rosyln'den yararlanarak işi otomatize edebilir miyiz, edebiliyorsak ne kadar ileri gidebiliriz sorularına cevap bulmaya çalışıyoruz.
