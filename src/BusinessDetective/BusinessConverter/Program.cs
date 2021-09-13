@@ -59,6 +59,7 @@ namespace BusinessConverter
                         {
                             StringBuilder interfaceFileBuilder = new StringBuilder();
                             StringBuilder namespaceBuilder = new StringBuilder();
+                            StringBuilder endPointBuilder = new StringBuilder();
 
                             #region Find and Add Usings
 
@@ -119,6 +120,16 @@ namespace BusinessConverter
 
                             #endregion
 
+                            #region Create ServiceEndPoints
+
+                            endPointBuilder.AppendLine($"<service behaviorConfiguration=\"\" name=\"{nsName}.{innerClass.Identifier}\">");
+                            endPointBuilder.AppendLine($"\t<endpoint address=\"\" binding=\"basicHttpsBinding\" contract=\"{nsName}.I{innerClass.Identifier}\"/>");
+                            endPointBuilder.AppendLine($"\t<endpoint address=\"mex\" binding=\"mexHttpsBinding\" contract=\"IMetadataExchange\"/>");
+                            endPointBuilder.AppendLine("</service>");
+                            svcBuilder.Append(endPointBuilder.ToString());
+
+                            #endregion
+
                             interfaceFileBuilder.AppendLine("}");
                             interfaceFileBuilder.AppendLine("}");
                             var newFile = CSharpSyntaxTree.ParseText(interfaceFileBuilder.ToString()).GetRoot().NormalizeWhitespace();
@@ -145,6 +156,7 @@ namespace BusinessConverter
             #endregion
 
             File.WriteAllText(Path.Combine(Environment.CurrentDirectory, "InterfaceCreateReport.txt"), reporter.ToString());
+            File.WriteAllText(Path.Combine(Environment.CurrentDirectory, "Endpoints.xml"), svcBuilder.ToString());
 
             msWorkspace.CloseSolution();
         }
