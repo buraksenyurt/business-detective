@@ -16,30 +16,35 @@ namespace BusinessConverter
     //TODO@Burak Refactore yapalım
     class Program
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         static async Task Main(string[] args)
         {
             MSBuildWorkspace msWorkspace = MSBuildWorkspace.Create();
             msWorkspace.LoadMetadataForReferencedProjects = true;
+            log.Info("Workspace created.");
 
             //TODO Komut satırından alalım
             var solutionPath = ConfigurationManager.AppSettings["SolutionPath"];
             var businessLibName = ConfigurationManager.AppSettings["BusinessProjectName"];
             var businessContractName = ConfigurationManager.AppSettings["BusinessContractProjectName"];
             var solution = await msWorkspace.OpenSolutionAsync(solutionPath);
+            log.Info("Solution opened");
 
-            Project project = solution.Projects.FirstOrDefault(i => i.Name == businessLibName);
-            Project projectServiceContract = solution.Projects.FirstOrDefault(i => i.Name == businessContractName);
+            var project = solution.Projects.FirstOrDefault(i => i.Name == businessLibName);
+            var projectServiceContract = solution.Projects.FirstOrDefault(i => i.Name == businessContractName);
             var contractRootPath = Path.GetDirectoryName(projectServiceContract.FilePath);
             var counter = 1;
-            StringBuilder svcBuilder = new StringBuilder();
-            StringBuilder reporter = new StringBuilder();
-            List<InterfaceType> interfaceDocuments = new List<InterfaceType>();
+            var svcBuilder = new StringBuilder();
+            var interfaceDocuments = new List<InterfaceType>();
 
             #region Find Interfaces
 
+            log.Info("Find Interfaces phase started.");
+
             foreach (DocumentId docId in project.DocumentIds)
             {
-                Document doc = project.GetDocument(docId);
+                log.Info($"Project:{project.Name}.Document Count:{project.Documents.Count()}");
+                var doc = project.GetDocument(docId);
 
                 if (doc.Name.StartsWith("BC")) // Arama desenini parametrik alabilir miyiz?
                 {
@@ -49,10 +54,9 @@ namespace BusinessConverter
                     var documentRoot = syntaxTree.GetRoot();
 
                     var classess = documentRoot.DescendantNodes().OfType<ClassDeclarationSyntax>().ToList();
-                    if (classess.Count > 1)
+                    if (classess.Count > 1) // Birden fazla sınıf varsa nasıl bir strateji izlenmeli?
                     {
-                        reporter.AppendLine($"Birden fazla sınıf içeren dosya: {doc.FilePath}");
-                        Console.WriteLine($"\t\tMore than one class{doc.FilePath}");
+                        log.Warn($"There is file with multiple classes.{doc.FilePath}");
                     }
                     foreach (var innerClass in classess)
                     {
@@ -148,20 +152,21 @@ namespace BusinessConverter
                                 DirectoryName = new string[] { Path.Combine(contractRootPath, Path.Combine(doc.Folders.ToArray())) }
                             };
                             interfaceDocuments.Add(interfaceType);
-                            reporter.AppendLine($"{innerClass.Identifier}->I{innerClass.Identifier}");
+                            log.Info($"Change.{innerClass.Identifier} to I{innerClass.Identifier}");
                         }
                         else
                         {
-                            reporter.AppendLine($"{innerClass.Identifier} BaseList NULL");
-                            Console.WriteLine($"{innerClass.Identifier} BaseList NULL");
+                            log.Warn($"BaseList is NULL.{innerClass.Identifier}");
                         }
                     }
                 }
             }
 
+            log.Info("Find Interfaces phase completed.");
             var changedSln = project.Solution;
 
             #endregion
+            log.Info("Implement Interface to BusinessClass phase started.");
 
             #region Implement Interfaces to BusinessClass
 
@@ -170,7 +175,7 @@ namespace BusinessConverter
 
             foreach (DocumentId docId in changedProject.DocumentIds)
             {
-                Document doc = changedProject.GetDocument(docId);
+                var doc = changedProject.GetDocument(docId);
                 if (doc.Name.StartsWith("BC"))
                 {
                     Console.WriteLine($"Changing:{counter}\t{doc.FilePath}");
@@ -204,7 +209,11 @@ namespace BusinessConverter
 
             #endregion
 
-            #region Create Interfaces On BusinessContracts
+            log.Info("Implement Interface to BusinessClass phase completed.");
+
+            log.Info("Create Interfaces phase started.");
+
+            #region Create Interfaces on BusinessContracts
 
             var contractProject = lastSln.Projects.FirstOrDefault(i => i.Name == businessContractName);
             foreach (var doc in interfaceDocuments)
@@ -219,8 +228,11 @@ namespace BusinessConverter
 
             #endregion
 
-            File.WriteAllText(Path.Combine(Environment.CurrentDirectory, "InterfaceCreateReport.txt"), reporter.ToString());
-            File.WriteAllText(Path.Combine(Environment.CurrentDirectory, "Endpoints.xml"), svcBuilder.ToString());
+            log.Info("Create Interfaces phase completed.");
+
+            var endpointFile = Path.Combine(Environment.CurrentDirectory, ConfigurationManager.AppSettings["EndpointsFileName"]);
+            File.WriteAllText(endpointFile, svcBuilder.ToString());
+            log.Info($"Endpoints file created.{endpointFile}");
         }
     }
 }
