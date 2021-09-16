@@ -19,7 +19,9 @@ ___Sınıfları elle interface haline getirmek veya dönüştürme işini üstle
 
 ## Çözüm Teorisi
 
-Solution kod tarafında açılı ve BusinessLibrary içerisindeki BCCommon türevli sınıflar keşfedilerek çeşitli kurallara göre interface tiplerinin oluşturulması sağlanır. Ayrıca o anki sınıfın bu interface tipini kullanması için gerekli ilaveler yapılır. İşlemler sırasında bir listede toplanan interface tipleri BusinessContracts içerisinde de eklenir. Interface tipleri oluşturulurken WCF için gerekli niteliklerle donatılır ve uygun config endPoint'lerinin çıkarılması sağlanır.
+Solution kod tarafında açılı ve BusinessLibrary içerisindeki BCCommon türevli sınıflar keşfedilerek çeşitli kurallara göre interface tiplerinin oluşturulması sağlanır. Ayrıca o anki sınıfın bu interface tipini kullanması için gerekli ilaveler yapılır. İşlemler sırasında bir listede toplanan interface tipleri BusinessContracts içerisinde de eklenir. Interface tipleri oluşturulurken WCF için gerekli niteliklerle donatılır ve uygun config endPoint'lerinin çıkarılması sağlanır. Tabii çözüm sırasında kodun ağaç yapısından _(syntax tree)_ yararlanmak iyi bir fikir olabilir.
+
+![./assets/screenshot_2.png](./assets/screenshot_2.png)
 
 ## Denemeler
 
